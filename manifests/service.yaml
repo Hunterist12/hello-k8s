@@ -1,0 +1,10 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: hello-golang
+spec:
+  selector:
+    app: hello-golang
+  ports:
+  - port: 8080
+    targetPort: 8080
