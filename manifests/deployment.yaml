@@ -1,0 +1,20 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: hello-golang
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hello-golang
+  template:
+    metadata:
+      labels:
+        app: hello-golang
+    spec:
+      containers:
+        - name: hello-golang
+          image: gcr.io/mason-226222/hello-golang-image
+          ports:
+          - name: https
+            containerPort: 8080
