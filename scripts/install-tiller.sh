@@ -1,21 +1,14 @@
 #!/bin/bash
 
-if [ -z $1 ]
-  then
-    export NAMESPACE=kube-system
-  else
-    export NAMESPACE=$1
-fi
-
-echo "Installing Tiller into namespace: $NAMESPACE"
+echo "Installing Tiller into namespace: kube-system"
 
 echo "Creating service account..."
-kubectl create serviceaccount -n $NAMESPACE tiller
+kubectl create serviceaccount -n kube-system tiller
 
 echo "Assigning cluster role..."
 kubectl create clusterrolebinding tiller-binding \
     --clusterrole=cluster-admin \
-    --serviceaccount $NAMESPACE:tiller
+    --serviceaccount kube-system:tiller
 
 echo "Initializing..."
 helm init --service-account tiller
