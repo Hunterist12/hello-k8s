@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 	"strings"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func HandleRequest(rw http.ResponseWriter, req *http.Request) {
@@ -21,6 +22,7 @@ func HandleRequest(rw http.ResponseWriter, req *http.Request) {
 
 func main() {
 	http.HandleFunc("/", HandleRequest)
+	http.Handle("/metrics", promhttp.Handler())
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		panic(err)
 	}
