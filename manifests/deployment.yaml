@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: hello-golang
-          image: gcr.io/mason-226222/hello-golang-image
+          image: gcr.io/mason-226222/hello-golang:v2
           ports:
           - name: https
             containerPort: 8080
