@@ -1,11 +1,19 @@
-FROM golang:1.11 as builder
-WORKDIR /go/src/github.com/Hunterist/hello-golang/
-COPY main.go .
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
+# Start with golang image
+FROM golang:1.11 AS builder
 
-FROM alpine:3.7  
-RUN apk --no-cache add ca-certificates
-WORKDIR /root/
-COPY --from=builder /go/src/github.com/Hunterist/hello-golang/main .
+# Download and install the latest release of dep
+ADD https://github.com/golang/dep/releases/download/v0.4.1/dep-linux-amd64 /usr/bin/dep
+RUN chmod +x /usr/bin/dep
+
+# Copy the code from the host and compile it
+WORKDIR $GOPATH/src/github.com/Hunterist12/hello-k8s/hello-golang
+COPY Gopkg.toml Gopkg.lock ./
+RUN dep ensure --vendor-only
+COPY . ./
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix nocgo -o /app .
+
+# copy compiled code to empty image
+FROM scratch
+COPY --from=builder /app ./
 EXPOSE 8080
-CMD ["./main"]
+ENTRYPOINT ["./app"]
